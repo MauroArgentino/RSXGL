@@ -1,62 +1,43 @@
-# RSXGL - The RSX Graphics Library
+# RSXGL - La biblioteca de gráficos RSX
 
-This library implements parts of the OpenGL 3.1 core profile specification for
-the PlayStation 3's RSX GPU. It's suitable for use in programs that
-have exclusive access to the RSX, such as GameOS software (and is likely
-unsuitable for implementing a multitasking desktop, as the library
-doesn't arbitrate access to the RSX).
+Esta biblioteca implementa partes de la especificación de perfil de núcleo de OpenGL 3.1 para la GPU RSX de PlayStation 3. Es adecuado para su uso en programas que tienen acceso exclusivo al RSX, como el software GameOS (y es probable que no sea adecuado para implementar un escritorio multitarea, ya que la biblioteca no arbitra el acceso al RSX).
 
-Please see the STATUS file for up-to-date information about the
-current capabilities of this library.
+Consulte el archivo STATUS para obtener información actualizada sobre las capacidades actuales de esta biblioteca.
 
-## Installing
+## Instalar
 
-RSXGL uses the GNU autotools for its build system and is distributed
-with a configure script. It requires the following projects:
+RSXGL utiliza las herramientas automáticas GNU para su sistema de compilación y se distribuye con un script de configuración. Requiere los siguientes proyectos:
 
 * [ps3toolchain](http://github.com/ps3dev/ps3toolchain)
 * [PSL1GHT](http://github.com/ps3dev/PSL1GHT)
 
-RSXGL incorporates parts of the Mesa project, primarily to provide
-runtime compilation of GLSL programs. Suitable versions of Mesa and
-libdrm are included with RSXGL. python 2.6 with the libxml2 module is
-required by Mesa's build process (specifically for building GLSL's
-builtin functions). To tell the build system to use a particular python
-executable, other than the default, set the PYTHON environment variable:
+RSXGL incorpora partes del proyecto Mesa, principalmente para proporcionar la compilación en tiempo de ejecución de los programas GLSL. Las versiones adecuadas de Mesa y libdrm se incluyen con RSXGL. python 2.6 con el módulo libxml2 es requerido por el proceso de compilación de Mesa (específicamente para construir las funciones integradas de GLSL). Para indicar al sistema de compilación que utilice un ejecutable de Python determinado, distinto del predeterminado, establezca la variable de entorno PYTHON:
 
 ```
 export PYTHON=/path/to/python-2.6
 ```
 
-Debian/Docker example dependencies:
+Dependencias de ejemplo de Debian/Docker:
 ```
 apt-get install python-libxml2 xutils-dev nvidia-cg-toolkit
 ```
 
-The RSXGL library depends upon a toolchain that can generate binaries for the
-PS3's PPU, and also upon parts of the PSL1GHT SDK. The sample programs also
-require a few ported libraries, such as libpng, which are provided by
-the ps3toolchain project. ps3toolchain recommends setting two
-environment variables to locate these dependencies:
+La biblioteca RSXGL depende de una cadena de herramientas que puede generar archivos binarios para la PPU de PS3 y también para partes del SDK de PSL1GHT. Los programas de ejemplo también requieren algunas bibliotecas portadas, como libpng, que son proporcionadas por el proyecto ps3toolchain. ps3toolchain recomienda establecer dos variables de entorno para localizar estas dependencias:
 
 ```
 export PS3DEV=/usr/local/ps3dev
 export PSL1GHT=$PS3DEV
 ```
 
-RSXGL's configure script will use the above environment variables if
-they're set;  if they aren't set, by default the script uses the above
-settings.
+El script configure de RSXGL utilizará las variables de entorno anteriores si están establecidas; si no se establecen, de forma predeterminada el script utiliza la configuración anterior.
 
-RSXGL comes with an `autogen.sh` script that should be used to generate 
-and run the project's `configure` script. From the top-level source directory:
+RSXGL viene con un script que se debe usar para generar y ejecutar el script del proyecto. Desde el directorio de origen de nivel superior:
 
 ```
 ./autogen.sh
 ```
 
-You can just generate the configure script, without actually configuring
-the build (useful if you want to build in a directory separate from the source):
+Simplemente puede generar el script de configuración, sin configurar realmente la compilación (útil si desea compilar en un directorio independiente del origen):
 
 ```
 NOCONFIGURE=1 ./autogen.sh
@@ -68,63 +49,45 @@ make
 make install
 ```
 
-The build system creates libraries intended to be run on the PS3; it
-also creates some utilities (such as a shading program assembler
-derived from PSL1GHT's cgcomp) that are meant to run on the build
-system. By default, these products are installed under $PS3DEV/ppu
-and $PS3DEV, respectively. You can direct the build system to place
-them elsewhere:
+El sistema de compilación crea bibliotecas destinadas a ejecutarse en la PS3; también crea algunas utilidades (como un ensamblador de programas de sombreado derivado del cgcomp de PSL1GHT) que están destinadas a ejecutarse en el sistema de compilación. De forma predeterminada, estos productos se instalan en $PS3DEV/ppu y $PS3DEV, respectivamente. Puede dirigir el sistema de compilación para colocarlos en otro lugar:
 
 ```
 ./configure --with-ppu-prefix=/path/to/rsxgl --prefix=/path/to/ps3dev
 ```
 
-If the ported libraries, such as libpng and zlib, have been installed
-someplace other than ${PS3DEV}/portlibs/ppu, you can set an
-environment variable to find them:
+Si las bibliotecas portadas, como libpng y zlib, se han instalado en otro lugar que no sea $-PS3DEV/portlibs/ppu, puede establecer una variable de entorno para encontrarlos:
 
 ```
 ./configure ppu_portlibs_PKG_CONFIG_PATH=/path/to/portlibs/lib/pkgconfig
 ```
 
-Pass the "--help" option to configure to see many other build system options.
+Pase la opción "--help" para configurar para ver muchas otras opciones del sistema de compilación.
 
-## Sample programs
+## Programas de muestra
 
-Currently two sample programs are built:
+Actualmente se construyen dos programas de ejemplo:
 
-* src/samples/rsxgltest - A very simple test program whose contents and
-behavior will vary. This program is mainly used to try out various
-features of the library as they are developed.
+* src/samples/rsxgltest - Un programa de prueba muy simple cuyo contenido y comportamiento variarán. Este programa se utiliza principalmente para probar varias características de la biblioteca a medida que se desarrollan.
 
-* src/samples/rsxglgears - A port of an old chestnut, the "glgears"
-program that uses OpenGL to render some spinning gears. This port is
-based upon a version included in the Mesa library, which was itself a
-port to OpenGL ES 2 after being handed down throughout the ages.
+* src/samples/rsxglgears - Un puerto de una castaña antigua, el programa "glgears" que utiliza OpenGL para renderizar algunos engranajes giratorios. Este puerto se basa en una versión incluida en la biblioteca Mesa, que era en sí mismo un puerto a OpenGL ES 2 después de ser transmitido a lo largo de las edades.
 
-Sample programs are packaged into NPDRM .pkg files, but those packages
-remain in their build locations; they don't get moved anywhere
-relative to RSXGL's install path by "make install".
-
-The sample can print debugging information over TCP, in the manner of
-PSL1GHT's network/debugtest sample. You can pass the the IP address of
-your host system to RSXGL's configure:
+Los programas de ejemplo se empaquetan en archivos .pkg NPDRM, pero esos paquetes permanecen en sus ubicaciones de compilación; no se mueven a ninguna parte en relación con la ruta de instalación de RSXGL por "hacer instalación".
+El ejemplo puede imprimir información de depuración a través de TCP, a la manera del ejemplo de red/debugtest de PSL1GHT. Puede pasar la dirección IP de su sistema host a la configuración de RSXGL:
 
 ```
 ./configure RSXGL_CONFIG_samples_host_port=192.168.1.1 RSXGL_CONFIG_samples_port=9100
 ```
 
-Before starting the application on the PS3, use this command to
-receive debugging output:
+Antes de iniciar la aplicación en PS3, utilice este comando para recibir la salida de depuración:
 
 ```
 nc -l 9100
 ```
 
-If you don't want to build the samples at all:
+Si no desea crear las muestras en absoluto:
 
 ```
 ./configure --disable-samples
 ```
 
-More complex samples are available in [a separate project](http://github.com/gzorin/rsxgl-samples).
+Hay ejemplos más complejos disponibles en [a separate project](http://github.com/gzorin/rsxgl-samples).
